@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace CoordinateSystem
 {
@@ -31,45 +32,29 @@ namespace CoordinateSystem
                 Console.WriteLine("Executing finally block.");
             }
 
-            //var x = CalculateDistanceFromCenter("Point1", 3, 2);
+            var points = new List<Point>();
+            using (FileStream stream = File.Open(Environment.CurrentDirectory + "/points.txt", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    var count = 1;
+                    while (!reader.EndOfStream)
+                    {
+                        var point = reader.ReadLine().Split(",");
+                        points.Add(new Point($"Point{count}", Convert.ToDouble(point[1]), Convert.ToDouble(point[2])));
+                        count++;
+                    }
+                }
+            }
 
-            //Console.WriteLine(x);
-        }
+            foreach (var p in points)
+            {
+                p.ShowQuadrant();
+                p.CalculateDistanceFromCenter();
+            }
 
-        static double CalculateDistanceFromCenter(string name, double x, double y)
-        {
-            double centerX = 0;
-            double centerY = 0;
-
-            return Math.Pow((x - centerX), 2) + Math.Pow((y - centerY), 2);
-        }
-
-        static void ShowQuadrant(string name, double x, double y)
-        {
-            if (x == 0)
-            {
-                Console.WriteLine($"{name} is on the x axis.");
-            }
-            else if (y == 0)
-            {
-                Console.WriteLine($"{name} is on the y axis.");
-            }
-            else if (x > 0 && y > 0)
-            {
-                Console.WriteLine($"{name} is in 1st quadrant.");
-            }
-            else if (x > 0 && y < 0)
-            {
-                Console.WriteLine($"{name} is in 4th quadrant.");
-            }
-            else if (y > 0 && x < 0)
-            {
-                Console.WriteLine($"{name} is in 2nd quadrant.");
-            }
-            else if (y < 0 && x < 0)
-            {
-                Console.WriteLine($"{name} is in 3rd quadrant.");
-            }
+            var max = points.OrderByDescending(x => x.DistanceFromCenter).First();
+            Console.WriteLine($"Point {max.Name} is furthest from the center with {max.DistanceFromCenter} distance");
         }
     }
 }
