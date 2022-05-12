@@ -11,10 +11,10 @@ namespace CoordinateSystem
             this.PointY = y;
         }
 
-        public string Name { get; set; }
-        public double PointX { get; set; }
-        public double PointY { get; set; }
-        public double DistanceFromCenter { get; set; }
+        public string Name { get; private set; }
+        public double PointX { get; private set; }
+        public double PointY { get; private set; }
+        public double DistanceFromCenter { get; private set; }
 
         public void SetDistance(double distance)
         {
@@ -33,19 +33,19 @@ namespace CoordinateSystem
             }
             else if (this.PointX > 0 && this.PointY > 0)
             {
-                Console.WriteLine($"{this.Name} is in 1st quadrant.");
+                Console.WriteLine($"{this.Name} is in the 1st quadrant.");
             }
             else if (this.PointX > 0 && this.PointY < 0)
             {
-                Console.WriteLine($"{this.Name} is in 4th quadrant.");
+                Console.WriteLine($"{this.Name} is in the 4th quadrant.");
             }
             else if (this.PointY > 0 && this.PointX < 0)
             {
-                Console.WriteLine($"{this.Name} is in 2nd quadrant.");
+                Console.WriteLine($"{this.Name} is in the 2nd quadrant.");
             }
             else if (this.PointY < 0 && this.PointX < 0)
             {
-                Console.WriteLine($"{this.Name} is in 3rd quadrant.");
+                Console.WriteLine($"{this.Name} is in the 3rd quadrant.");
             }
         }
 

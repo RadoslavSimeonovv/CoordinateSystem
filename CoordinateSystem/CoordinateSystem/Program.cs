@@ -9,19 +9,40 @@ namespace CoordinateSystem
     {
         static void Main(string[] args)
         {
-            var pointsList = new List<Point>() { new Point("Point1", 1, 2), new Point("Point2", 0, 5), new Point("Point3", -3.4, 5), new Point("Point4", 2, -12.5), new Point("Point5", 2.3, 0) };
+            var numberOfPoints = 0;
+            Console.WriteLine("Enter the number of points:");
+            while (!int.TryParse(Console.ReadLine(), out numberOfPoints))
+            {
+                Console.WriteLine("Enter a valid integer number");
+            }
 
             try
             {
+                var i = 1;
                 string path = Path.Combine(Environment.CurrentDirectory, "points.txt");
                 using (TextWriter tw = new StreamWriter(path))
                 {
-                    foreach (var point in pointsList)
+                    while (i <= numberOfPoints)
                     {
-                        tw.WriteLine(string.Format("{0},{1},{2}", point.Name, point.PointX, point.PointY));
+                        var pointX = 0.0;
+                        var pointY = 0.0;
+                        Console.WriteLine($"Enter point{i} X:");
+                        while (!double.TryParse(Console.ReadLine(), out pointX))
+                        {
+                            Console.WriteLine("Invalid format, please input again!");
+                        };
+                        Console.WriteLine($"Enter point{i} Y:");
+                        while (!double.TryParse(Console.ReadLine(), out pointY))
+                        {
+                            Console.WriteLine("Invalid format, please input again!");
+                        };
+                        tw.WriteLine(string.Format("{0},{1}", pointX, pointY));
+                        i++;
                     }
+                   
                     tw.Close();
                 }
+       
             }
             catch (Exception e)
             {
@@ -29,7 +50,7 @@ namespace CoordinateSystem
             }
             finally
             {
-                Console.WriteLine("Executing finally block.");
+                Console.WriteLine("Finishing input\n");
             }
 
             var points = new List<Point>();
@@ -41,7 +62,7 @@ namespace CoordinateSystem
                     while (!reader.EndOfStream)
                     {
                         var point = reader.ReadLine().Split(",");
-                        points.Add(new Point($"Point{count}", Convert.ToDouble(point[1]), Convert.ToDouble(point[2])));
+                        points.Add(new Point($"Point{count}", Convert.ToDouble(point[0]), Convert.ToDouble(point[1])));
                         count++;
                     }
                 }
@@ -53,8 +74,10 @@ namespace CoordinateSystem
                 p.CalculateDistanceFromCenter();
             }
 
-            var max = points.OrderByDescending(x => x.DistanceFromCenter).First();
-            Console.WriteLine($"Point {max.Name} is furthest from the center with {max.DistanceFromCenter} distance");
+            var maxDistance = points.Max(y => y.DistanceFromCenter);
+            var furthestPoints = points.Where(x => x.DistanceFromCenter == maxDistance).ToList();
+
+            Console.WriteLine($"The furthest points from the center are {String.Join(", ", furthestPoints.Select(x => x.Name))} with {furthestPoints[0].DistanceFromCenter} distance");
         }
     }
 }
